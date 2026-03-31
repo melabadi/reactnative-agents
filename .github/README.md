@@ -11,6 +11,7 @@ This directory configures GitHub Copilot agents, skills, MCP servers, and VS Cod
 │   ├── rn-architect.agent.md            # Architecture design & review
 │   ├── rn-debugger.agent.md             # Crash & error diagnosis
 │   ├── rn-reviewer.agent.md             # Code review checklist
+│   ├── rn-fleet.agent.md                # Fleet coordinator (Spec Kit-first orchestration)
 │   ├── rn-perf.agent.md                 # Performance optimization
 │   ├── rn-testing.agent.md              # Test writing specialist
 │   └── speckit-designer.agent.md        # Spec Kit — spec-driven development
@@ -71,11 +72,64 @@ Rovo enables Copilot to:
 
 ## Usage
 
+### Agent Fleet + Spec Kit
+
+If you want agents to collaborate as a delivery fleet, use a Spec Kit-first flow:
+
+1. `@speckit-designer` creates/updates `specify -> clarify -> plan -> tasks`
+2. `@rn-architect` maps tasks to files and sequence
+3. Implementation agent executes tasks in small batches
+4. `@rn-reviewer` performs risk/regression review
+5. `@rn-testing` fills coverage gaps
+6. `@rn-perf` validates rendering/interaction performance
+7. `@rn-debugger` triages failures when checks break
+
+Full playbook and prompt templates:
+- [`docs/agent-fleet-speckit.md`](../docs/agent-fleet-speckit.md)
+
+Quickstart prompt:
+
+```text
+@speckit-designer
+Create feature artifacts for: <feature description>
+Run /speckit.specify, /speckit.clarify, /speckit.plan, /speckit.tasks.
+Then prepare implementation batches for rn-architect and coding agent handoff.
+```
+
+#### How Users Run This
+
+Fastest path:
+
+1. Open Copilot Chat in this repository.
+2. Run the coordinator agent with a single prompt:
+
+```text
+@rn-fleet Run this feature through the full Spec Kit-first fleet workflow: <feature request>
+```
+
+Include in the first prompt:
+
+1. Feature goal (user outcome)
+2. Constraints (platform scope, deadlines, must/avoid)
+3. Acceptance criteria (what done means)
+4. Non-goals (what is out of scope)
+
+Manual path (stage-by-stage):
+
+1. `@speckit-designer`: run `/speckit.specify`, `/speckit.clarify`, `/speckit.plan`, `/speckit.tasks`
+2. `@rn-architect`: map tasks to files and batches
+3. Implementation agent: execute batches in order
+4. `@rn-reviewer`: run regression and convention review
+5. `@rn-testing`: add missing tests and close coverage gaps
+6. `@rn-perf`: validate rendering and interaction performance
+7. `@rn-debugger`: triage failures with logs and changed files
+
 ### Agents
 
 Invoke agents in Copilot Chat with `@agent-name`:
 
 - **@rn-architect** — "Design the navigation structure for a multi-tab app with auth flow"
+- **@rn-fleet** — "Run this feature through the full Spec Kit-first fleet workflow"
 - **@rn-debugger** — "This crash happens on Android only: `TypeError: undefined is not an object`"
 - **@rn-reviewer** — "Review this PR for React Native best practices"
 - **@speckit-designer** — "Help me specify the photo album feature using Spec Kit"
