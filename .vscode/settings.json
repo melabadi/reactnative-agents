@@ -1,0 +1,27 @@
+{
+    // ─── GitHub Copilot ───────────────────────────────────────────────
+    // Enable agent mode for full Copilot capabilities
+    "chat.agent.enabled": true,
+    "chat.requestQueuing.defaultAction": "steer",
+    "github.copilot.chat.implementAgent.model": "GPT-5.2-Codex",
+
+    // Enable custom instructions from .github/copilot-instructions.md
+    "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+    // Show inline completions from Copilot
+    "editor.inlineSuggest.enabled": true,
+    // ─── TypeScript ───────────────────────────────────────────────────
+    "js/ts.tsdk.path": "node_modules/typescript/lib",
+    "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+    // ─── Editor defaults for React Native ─────────────────────────────
+    "[typescriptreact]": {
+        "editor.formatOnSave": true
+    },
+    "[typescript]": {
+        "editor.formatOnSave": true
+    },
+    // ─── File associations ────────────────────────────────────────────
+    "files.associations": {
+        "*.agent.md": "markdown",
+        "SKILL.md": "markdown"
+    }
+}
